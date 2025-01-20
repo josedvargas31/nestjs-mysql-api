@@ -20,4 +20,11 @@ export class UsersService {
   getAllUsers() {
     return this.usersRepository.find();
   }
+
+  //  get user by id
+  getUserById(id: number) {
+    return this.usersRepository.findOne({
+      where:{id},
+    });
+  }
 }
