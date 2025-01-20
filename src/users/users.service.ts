@@ -24,7 +24,12 @@ export class UsersService {
   //  get user by id
   getUserById(id: number) {
     return this.usersRepository.findOne({
-      where:{id},
+      where: { id },
     });
+  }
+
+  // delete user by id
+  deleteUserById(id: number) {
+    return this.usersRepository.delete({id});
   }
 }
