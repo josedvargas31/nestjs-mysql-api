@@ -25,13 +25,13 @@ export class UsersController {
 
   // get user by id
   @Get(':id')
-  getUserById(@Param('id', ParseIntPipe) id: number): Promise<User> {
+  getUserById(@Param('id', ParseIntPipe) id: number){
     return this.usersService.getUserById(id);
   }
 
   //  create a new user
   @Post()
-  CreateUser(@Body() newUser: createUserDto): Promise<User> {
+  CreateUser(@Body() newUser: createUserDto) {
     return this.usersService.createUser(newUser);
   }
 
