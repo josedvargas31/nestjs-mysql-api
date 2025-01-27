@@ -1,23 +1,23 @@
 import {
   Controller,
-  // Get,
-  // Post,
-  // Body,
+  Get,
+  Post,
+  Body,
 } from '@nestjs/common';
-// import { PostsService } from './posts.service';
-// import { CreatePostDto } from './dto/create-post.dto';
+import { PostsService } from './posts.service';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Controller('posts')
 export class PostsController {
-  // constructor(private postsService: PostsService) {}
+  constructor(private postsService: PostsService) {}
 
-  // @Post()
-  // create(@Body() createPostDto: CreatePostDto) {
-  //   return this.postsService.createPost(createPostDto);
-  // }
+  @Post()
+  create(@Body() post: CreatePostDto) {
+    return this.postsService.createPost(post);
+  }
 
-  // @Get()
-  // getAllPost() {
-  //   return this.postsService.getAllPost();
-  // }
+  @Get()
+  getAllPosts() {
+    return this.postsService.getAllPosts();
+  }
 }

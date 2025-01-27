@@ -18,7 +18,7 @@ export class PostsService {
     const userFound = await this.usersService.getUserById(post.authorId); // calls the getUserById method from the UsersService
 
     if (!userFound) {
-      return new HttpException('User not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
     const newPost = this.postsRepository.create(post);
@@ -26,8 +26,9 @@ export class PostsService {
   }
 
   // get all posts
-  getAllPost() {
-    return this.postsRepository.find();
+  getAllPosts() {
+    return this.postsRepository.find({
+      relations: ['author'], // returns the author of the post
+    });
   }
-
 }

@@ -12,7 +12,7 @@ import { Profile } from './profile.entity';
 export class UsersService {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
-    @InjectRepository(Profile) private profileRepository: Repository<Profile>
+    @InjectRepository(Profile) private profileRepository: Repository<Profile>,
   ) {}
 
   //  create a new user
@@ -24,7 +24,7 @@ export class UsersService {
     });
 
     if (userFound) {
-      return new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
     const newUser = this.usersRepository.create(user);
     return this.usersRepository.save(newUser);
@@ -32,16 +32,19 @@ export class UsersService {
 
   //   get all users
   getAllUsers() {
-    return this.usersRepository.find();
+    return this.usersRepository.find({
+      relations: ['posts', 'profile'],
+    });
   }
 
   //  get user by id
   async getUserById(id: number) {
     const userFound = await this.usersRepository.findOne({
       where: { id },
+      relations: ['posts'],
     });
     if (!userFound) {
-      return new HttpException('User not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
     return userFound;
   }
@@ -51,7 +54,7 @@ export class UsersService {
     const result = await this.usersRepository.delete({ id });
 
     if (result.affected === 0) {
-      return new HttpException('User not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
     return result;
   }
@@ -70,17 +73,19 @@ export class UsersService {
   }
 
   async createProfile(id: number, profile: createProfileDto) {
-    const userFound = await this.usersRepository.findOne({ // find user by id
+    const userFound = await this.usersRepository.findOne({
+      // find user by id
       where: {
         id,
       },
     });
-    if(!userFound) { // if user not found
-      return new HttpException('User not found', HttpStatus.NOT_FOUND);
+    if (!userFound) {
+      // if user not found
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-    const newProfile = this.profileRepository.create(profile) // create profile
+    const newProfile = this.profileRepository.create(profile); // create profile
 
-    const saveProfile = await  this.profileRepository.save(newProfile) // save profile
+    const saveProfile = await this.profileRepository.save(newProfile); // save profile
 
     userFound.profile = saveProfile; // assign profile to user
 
